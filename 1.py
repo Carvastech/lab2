@@ -1,62 +1,99 @@
-class Perro: 
-    def __init__(self, nombre, edad, numerodueño, raza, peso, tipo):
-        self.nombre = nombre
-        self.edad = edad
-        self.numerodueno = numerodueño
-        self.raza = raza
-        self.tipo = tipo
-        self.peso = peso
-        self.estado = "No atendido"
 
-    def mostrar_info(self): 
+#Nuevo ejercicio 1 de Hamburguesas y Gaseosas
+
+class Producto:
+    def __init__(self, nombre, tipo, precio):
+        self.nombre = nombre
+        self.tipo = tipo
+        self.precio = precio
+
+    def mostrar_info(self):
         print(f"Nombre: {self.nombre}")
-        print(f"Edad: {self.edad}")
-        print(f"Número del dueño: {self.numerodueño}")
-        print(f"Raza: {self.raza}")
         print(f"Tipo: {self.tipo}")
-        print(f"Estado: {self.estado}")
+        print(f"Precio: ${self.precio:.2f}")
         print("-" * 30)
 
-def ingresar_perro():  
-    nombre = input("Ingrese el nombre del perro: ")
-    edad = input("Ingrese la edad del perro: ")
-    numerodueno = input("Ingrese el número del dueño: ")
-    raza = input("Ingrese la raza del perro: ")
-    peso = float(input("Ingrese el peso del perro (en kg): "))
-    if peso < 10: 
-        tipo = "Pequeño"
+class Orden:
+    def __init__(self):
+        self.productos = []
+        self.total = 0.0
+
+    def agregar_producto(self, producto):
+        self.productos.append(producto)
+        self.total += producto.precio
+
+    def mostrar_orden(self):
+        print("\nOrden del cliente:")
+        for producto in self.productos:
+            producto.mostrar_info()
+        print(f"Total a pagar: ${self.total:.2f}")
+        print("-" * 30)
+
+def ingresar_producto(tipo):
+    if tipo == "hamburguesa":
+        tipo_hamburguesa = input("Ingrese el tipo de hamburguesa (res/pollo): ").strip().lower()
+        if tipo_hamburguesa == "res":
+            nombre = "Hamburguesa de Res"
+            precio = 5.00
+        elif tipo_hamburguesa == "pollo":
+            nombre = "Hamburguesa de Pollo"
+            precio = 4.50
+        else:
+            print("Tipo de hamburguesa no válido.")
+            return None
+    elif tipo == "gaseosa":
+        tamaño_gaseosa = input("Ingrese el tamaño de la gaseosa (pequeño/grande): ").strip().lower()
+        if tamaño_gaseosa == "pequeño":
+            nombre = "Gaseosa Pequeña"
+            precio = 1.50
+        elif tamaño_gaseosa == "grande":
+            nombre = "Gaseosa Grande"
+            precio = 2.50
+        else:
+            print("Tamaño de gaseosa no válido.")
+            return None
     else:
-        tipo = "Grande"
-    perro = Perro(nombre, edad, numerodueno, raza, peso, tipo)  
-    perro.estado = "Atendido" 
-    return perro 
+        print("Tipo de producto no válido.")
+        return None
 
-def mostrar_perros(): 
-    print("\nPerros registrados:")
-    for perro in perros:
-        perro.mostrar_info()
+    return Producto(nombre, tipo, precio)
 
-def menu_principal(): #funcion para el menu principal
+def registrar_orden():
+    orden = Orden()
+    while True:
+        tipo_producto = input("Ingrese el tipo de producto (hamburguesa/gaseosa) o 'fin' para cancelar: ").strip().lower()
+        if tipo_producto == "fin":
+            break
+        producto = ingresar_producto(tipo_producto)
+        if producto:
+            orden.agregar_producto(producto)
+    return orden
+
+def menu_principal():
     while True:
         print("Seleccione la opción que desea realizar:")
-        print("1. Registrar perro")
-        print("2. Mostrar perros")
-        print("3. Salir")
+        print("1. Registrar nueva orden")
+        print("2. Salir")
         opcion = int(input("Ingrese el número correspondiente a la opción que desea realizar: "))
 
         if opcion == 1:
-            nuevo_perro = ingresar_perro()
-            perros.append(nuevo_perro)
+            orden = registrar_orden()
+            orden.mostrar_orden()
+            while True:
+                try:
+                    pago = float(input("Ingrese con cuánto va a pagar: $"))
+                    if pago < orden.total:
+                        print("El monto ingresado es insuficiente. Por favor, intente de nuevo.")
+                    else:
+                        cambio = pago - orden.total
+                        print(f"Su cambio es: ${cambio:.2f}")
+                        break
+                except ValueError:
+                    print("Ingrese un monto válido.")
         elif opcion == 2:
-            mostrar_perros()
-        elif opcion == 3:
             print("Saliendo...")
             break
         else:
             print("Opción no válida. Por favor, intente de nuevo.")
 
-# Lista global para almacenar los perros
-perros = []
-
-# Ejecutar el menú principal
 menu_principal()

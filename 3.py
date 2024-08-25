@@ -1,71 +1,64 @@
-class Auto: 
-    def __init__(self, modelo,tipo, marca, año, kilometraje, precio, color, transmision, placa, traccion):
-        self.modelo = modelo
+class Funcion:
+    def __init__(self, titulo, hora, tipo, numero_sala):
+        self.titulo = titulo
+        self.hora = hora
         self.tipo = tipo
-        self.marca = marca
-        self.ano = año
-        self.precio = precio
-        self.color = color
-        self.kilometraje = kilometraje
-        self.transmision = transmision
-        self.placa = placa
-        self.traccion = traccion
-        self.capacidad = "5 pasajeros"
-        self.ruedas = "4 ruedas"
+        self.numero_sala = numero_sala
 
+    def calcular_precio_total(self, cantidad_boletos, es_miercoles):
+        precio_base = 10.0  
+        if es_miercoles:
+            cantidad_boletos = (cantidad_boletos + 1) // 2  
+        return precio_base * cantidad_boletos
 
-    def mostrar_info(self): 
+    def mostrar_info(self):
         print("-" * 30)
-        print(f"modelo: {self.modelo}")
-        print(f"marca: {self.marca}")
-        print(f"Tipo: {self.tipo}")
-        print(f"Año: {self.ano}")
-        print(f"color: {self.color}")
-        print(f"Capacidad: {self.capacidad}")
-        print(f"Ruedas: {self.ruedas}")
-        print(f"transmision: {self.transmision}")
-        print(f"placa: {self.placa}")
-        print(f"Kilometraje: {self.kilometraje}")
-        print(f"Precio de Venta: ${self.precio}")
+        print(f"Título de la Película: {self.titulo}")
+        print(f"Hora de la Función: {self.hora}")
+        print(f"Tipo de Función: {self.tipo}")
+        print(f"Número de Sala: {self.numero_sala}")
         print("-" * 30)
 
-def ingresar_autos():
-    modelo = input("Ingrese el modelo del auto: ")
-    tipo = input("Ingrese el tipo del auto: ")
-    marca = input("Ingrese la marca del auto: ")
-    año = int(input("Ingrese el año del auto: "))
-    kilometraje = int(input("Ingrese el kilometraje del auto: "))
-    precio = float(input(f"Ingrese el precio de compra del auto {modelo}: $"))
-    color = input("Ingrese el color del auto: ")
-    transmision = input("Ingrese la transmision del auto: ")
-    placa = input("Ingrese la placa del auto: ")
-    traccion = input("Ingrese la traccion del auto: ")
-    PendingDeprecationWarning = calcular_precio(precio)
-    return Auto(modelo, tipo, marca, año, kilometraje, precio, color, transmision, placa, traccion)
+def ingresar_datos():
+    titulo = input("Ingrese el título de la película: ")
+    hora = input("Ingrese la hora de la función (HH:MM): ")
+    tipo = input("Ingrese el tipo de función (normal/3D/IMAX): ")
+    numero_sala = int(input("Ingrese el número de sala: "))
+    cantidad_boletos = int(input("Ingrese la cantidad de boletos: "))
+    
+   
+    dia_semana = input("Ingrese el día de la semana de la función (lunes, martes, ...): ").strip().lower()
+    es_miercoles = dia_semana == "miércoles"
 
-def calcular_precio(precio, margen=1.4):
-    precio = precio * margen
-    return precio
+    funcion = Funcion(titulo, hora, tipo, numero_sala)
+    precio_total = funcion.calcular_precio_total(cantidad_boletos, es_miercoles)
+    
+    return funcion, cantidad_boletos, precio_total
 
+def mostrar_funciones(funciones):
+    print("\nFunciones registradas:")
+    for funcion, cantidad_boletos, precio_total in funciones:
+        funcion.mostrar_info()
+        print(f"Cantidad de Boletos: {cantidad_boletos}")
+        print(f"Precio Total: ${precio_total:.2f}")
+        print("-" * 30)
 
-autos = []
-
-def mostrar_autos(autos):
-    print("\nAutos registrados:")
-    for autos in autos:
-        autos.mostrar_info()
-
-
-def menu_principal(): 
+def menu_principal():
+    funciones = []  
     while True:
-        opcion = int(input("Ingrese la opcion que desea hacer: \n Opcion 1: Ingresar auto \n Opcion 2: Mostrar Autos \n Opcion 3: Salir \n"))
+        print("-" * 30)
+        opcion = int(input("Ingrese la opción que desea realizar:\n1. Ingresar función\n2. Mostrar funciones\n3. Salir\n"))
         if opcion == 1:
-            nuevo_auto = ingresar_autos()
-            autos.append(nuevo_auto)
+            funcion, cantidad_boletos, precio_total = ingresar_datos()
+            funciones.append((funcion, cantidad_boletos, precio_total))
         elif opcion == 2:
-            mostrar_autos(autos)
-        if opcion == 3:
+            mostrar_funciones(funciones)
+        elif opcion == 3:
             print("Gracias por utilizar el sistema")
             break
+        else:
+            print("Opción no válida. Por favor, intente de nuevo.")
+        print("-" * 30)
 
-menu_principal() 
+
+menu_principal()

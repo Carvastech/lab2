@@ -1,52 +1,67 @@
-class Articulo: 
-    def __init__(self, tipo, marca, precio_compra, precio_venta):
-        self.tipo = tipo
-        self.marca = marca
-        self.precio_compra = precio_compra
-        self.precio_venta = precio_venta
+#Nuevo ejercicio 2 de Bicicletas
 
-    def mostrar_info(self): 
-        print(f"Artículo: {self.tipo}")
-        print(f"Marca: {self.marca}")
-        print(f"Precio de Compra: ${self.precio_compra}")
-        print(f"Precio de Venta: ${self.precio_venta}")
+class Bicicleta:
+    def __init__(self, tipo, precio_base):
+        self.tipo = tipo
+        self.precio_base = precio_base
+
+    def calcular_costo_renta(self, horas):
+        if self.tipo == "deportiva":
+            return self.precio_base * 1.5 * horas
+        else:  
+            return self.precio_base * horas
+
+    def mostrar_info(self):
+        print(f"Tipo de Bicicleta: {self.tipo}")
+        print(f"Precio Base por Hora: ${self.precio_base:.2f}")
         print("-" * 30)
 
-def calcular_precio_venta(precio_compra, margen=1.30): 
-    return precio_compra * margen
+def ingresar_bicicleta():
+    print("Seleccione el tipo de bicicleta que desea registrar:")
+    print("1. Deportiva")
+    print("2. Tradicional")
+    opcion = int(input("Ingrese el número correspondiente al tipo de bicicleta: "))
 
-def ingresar_articulo(): 
-    print("Seleccione el tipo de artículo que desea registrar:")
-    print("1. Cuaderno")
-    print("2. Lápiz")
-    opcion = int(input("Ingrese el número correspondiente al tipo de artículo: "))
-    
     if opcion == 1:
-        tipo = input("Ingrese el tipo de cuaderno (e.g., '50 hojas', '100 hojas'): ")
-        marca = "HOJITAS"
+        tipo = "deportiva"
+        precio_base = float(input("Ingrese el precio base por hora para bicicleta deportiva: "))
     elif opcion == 2:
-        tipo = input("Ingrese el tipo de lápiz (e.g., 'grafito', 'colores'): ")
-        marca = "RAYAS"
+        tipo = "tradicional"
+        precio_base = float(input("Ingrese el precio base por hora para bicicleta tradicional: "))
     else:
         print("Opción no válida. Por favor, intente de nuevo.")
-        return ingresar_articulo()
+        return ingresar_bicicleta()
 
-    precio_compra = float(input(f"Ingrese el precio de compra para {tipo} ({marca}): "))
-    precio_venta = calcular_precio_venta(precio_compra)
-    return Articulo(tipo=tipo, marca=marca, precio_compra=precio_compra, precio_venta=precio_venta)
+    return Bicicleta(tipo=tipo, precio_base=precio_base)
 
-
-articulos = []
-
-
-while True:
-    articulos.append(ingresar_articulo())
+def registrar_renta():
+    bicicleta = ingresar_bicicleta()
+    horas = float(input("Ingrese el número de horas de renta: "))
+    cliente = input("Ingrese el nombre del cliente: ")
     
-    continuar = input("¿Desea ingresar otro artículo? (s/n): ").strip().lower()
-    if continuar == 'n':
-        break
+    costo_total = bicicleta.calcular_costo_renta(horas)
+    
+    print("\nDetalles de la renta:")
+    print(f"Cliente: {cliente}")
+    bicicleta.mostrar_info()
+    print(f"Horas de Renta: {horas}")
+    print(f"Costo Total de Renta: ${costo_total:.2f}")
+    print("-" * 30)
+
+def menu_principal():
+    while True:
+        print("Seleccione la opción que desea realizar:")
+        print("1. Registrar renta de bicicleta")
+        print("2. Salir")
+        opcion = int(input("Ingrese el número correspondiente a la opción que desea realizar: "))
+
+        if opcion == 1:
+            registrar_renta()
+        elif opcion == 2:
+            print("Saliendo...")
+            break
+        else:
+            print("Opción no válida. Por favor, intente de nuevo.")
 
 
-print("\nArtículos registrados:")
-for articulo in articulos:
-    articulo.mostrar_info()
+menu_principal()
